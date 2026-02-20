@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Schiegaarden Kinarestaurant</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Raleway:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --cream:     #f5ede0;
+      --warm-bg:   #faf4ec;
+      --terracotta:#b5622a;
+      --brick:     #8c3e18;
+      --dark:      #2a1a0e;
+      --medium:    #5c3317;
+      --gold:      #c9933a;
+      --muted:     #9e7a58;
+      --border:    rgba(90,50,20,0.15);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--warm-bg);
+      color: var(--dark);
+      font-family: 'Raleway', sans-serif;
+      font-weight: 400;
+      overflow-x: hidden;
+    }
+
+    /* ── NOISE OVERLAY ── */
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+      pointer-events: none; z-index: 999;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 1.4rem 4rem;
+      background: rgba(250,244,236,0.88);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      transition: padding 0.3s;
+    }
+    .nav-logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.35rem; font-weight: 600;
+      color: var(--brick); letter-spacing: 0.04em;
+      text-decoration: none;
+    }
+    .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+    .nav-links a {
+      font-size: 0.78rem; letter-spacing: 0.15em; text-transform: uppercase;
+      color: var(--medium); text-decoration: none; font-weight: 500;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--terracotta); }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 100vh;
+      display: flex; flex-direction: column;
+      justify-content: center; align-items: center; text-align: center;
+      padding: 8rem 2rem 5rem;
+      position: relative; overflow: hidden;
+      background:
+        radial-gradient(ellipse 80% 60% at 20% 80%, rgba(181,98,42,0.12) 0%, transparent 65%),
+        radial-gradient(ellipse 60% 50% at 80% 20%, rgba(201,147,58,0.10) 0%, transparent 60%),
+        var(--warm-bg);
+    }
+
+    /* decorative circles */
+    .hero::after {
+      content: '';
+      position: absolute; top: -120px; right: -120px;
+      width: 500px; height: 500px; border-radius: 50%;
+      border: 1px solid rgba(181,98,42,0.12);
+      animation: rotateSlow 30s linear infinite;
+    }
+    .hero-ring {
+      position: absolute; bottom: -80px; left: -80px;
+      width: 350px; height: 350px; border-radius: 50%;
+      border: 1px solid rgba(201,147,58,0.15);
+      animation: rotateSlow 20s linear infinite reverse;
+    }
+    @keyframes rotateSlow { to { transform: rotate(360deg); } }
+
+    .hero-tag {
+      font-size: 0.72rem; letter-spacing: 0.22em; text-transform: uppercase;
+      color: var(--terracotta); font-weight: 500;
+      margin-bottom: 1.5rem;
+      opacity: 0; animation: fadeUp 0.8s 0.2s forwards;
+    }
+    .hero h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(3.5rem, 9vw, 7.5rem);
+      font-weight: 300; line-height: 0.95;
+      color: var(--dark); letter-spacing: -0.01em;
+      opacity: 0; animation: fadeUp 0.9s 0.4s forwards;
+    }
+    .hero h1 em {
+      font-style: italic; color: var(--terracotta);
+    }
+    .hero-sub {
+      margin-top: 1.8rem;
+      font-size: 0.88rem; letter-spacing: 0.08em;
+      color: var(--muted); max-width: 480px;
+      opacity: 0; animation: fadeUp 0.9s 0.6s forwards;
+    }
+    .hero-divider {
+      width: 60px; height: 1px;
+      background: linear-gradient(90deg, transparent, var(--gold), transparent);
+      margin: 2.2rem auto;
+      opacity: 0; animation: fadeUp 0.8s 0.7s forwards;
+    }
+    .hero-cta {
+      display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center;
+      opacity: 0; animation: fadeUp 0.9s 0.85s forwards;
+    }
+    .btn {
+      display: inline-block; padding: 0.85rem 2.2rem;
+      font-size: 0.75rem; font-weight: 600;
+      letter-spacing: 0.18em; text-transform: uppercase;
+      text-decoration: none; border-radius: 2px;
+      transition: all 0.3s;
+      cursor: pointer; border: none; font-family: 'Raleway', sans-serif;
+    }
+    .btn-primary {
+      background: var(--terracotta); color: var(--cream);
+    }
+    .btn-primary:hover { background: var(--brick); transform: translateY(-2px); box-shadow: 0 8px 25px rgba(140,62,24,0.3); }
+    .btn-outline {
+      background: transparent; color: var(--terracotta);
+      border: 1px solid var(--terracotta);
+    }
+    .btn-outline:hover { background: var(--terracotta); color: var(--cream); transform: translateY(-2px); }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── SECTION BASE ── */
+    section { padding: 7rem 2rem; }
+    .container { max-width: 1100px; margin: 0 auto; }
+    .section-label {
+      font-size: 0.7rem; letter-spacing: 0.25em; text-transform: uppercase;
+      color: var(--terracotta); font-weight: 600; margin-bottom: 0.8rem;
+    }
+    .section-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.2rem, 5vw, 3.8rem);
+      font-weight: 300; line-height: 1.1; color: var(--dark);
+    }
+    .section-title em { font-style: italic; color: var(--terracotta); }
+
+    /* ── ABOUT ── */
+    #about { background: var(--cream); }
+    .about-grid {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 5rem; align-items: center; margin-top: 4rem;
+    }
+    .about-text p {
+      font-size: 1.0rem; line-height: 1.85;
+      color: var(--medium); margin-top: 1.5rem;
+    }
+    .about-text p:first-of-type { margin-top: 2rem; }
+    .about-image-wrap {
+      position: relative;
+    }
+    .about-img-box {
+      width: 100%; aspect-ratio: 4/5;
+      background: linear-gradient(135deg, #c9933a22, #b5622a33);
+      border-radius: 4px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 5rem; overflow: hidden;
+      position: relative;
+    }
+    .about-img-box::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(160deg, rgba(201,147,58,0.15), rgba(181,98,42,0.25));
+    }
+    .about-badge {
+      position: absolute; bottom: -20px; right: -20px;
+      width: 120px; height: 120px; border-radius: 50%;
+      background: var(--terracotta); color: var(--cream);
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      text-align: center;
+    }
+    .about-badge span:first-child {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.8rem; font-weight: 600; line-height: 1;
+    }
+    .about-badge span:last-child {
+      font-size: 0.6rem; letter-spacing: 0.12em;
+      text-transform: uppercase; margin-top: 0.2rem;
+    }
+    .stats-row {
+      display: flex; gap: 2.5rem; margin-top: 2.5rem;
+      padding-top: 2.5rem; border-top: 1px solid var(--border);
+    }
+    .stat { }
+    .stat-num {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2.4rem; font-weight: 600;
+      color: var(--terracotta); line-height: 1;
+    }
+    .stat-label {
+      font-size: 0.7rem; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--muted); margin-top: 0.3rem;
+    }
+
+    /* ── MENU ── */
+    #menu { background: var(--warm-bg); }
+    .menu-tabs {
+      display: flex; gap: 0; margin-top: 3rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .tab-btn {
+      padding: 0.8rem 2rem;
+      background: none; border: none;
+      font-family: 'Raleway', sans-serif;
+      font-size: 0.78rem; letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--muted); cursor: pointer; font-weight: 500;
+      border-bottom: 2px solid transparent; margin-bottom: -1px;
+      transition: all 0.25s;
+    }
+    .tab-btn.active {
+      color: var(--terracotta);
+      border-bottom-color: var(--terracotta);
+    }
+    .tab-btn:hover:not(.active) { color: var(--medium); }
+    .menu-panel { display: none; padding: 3rem 0; }
+    .menu-panel.active { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; }
+    .menu-item {
+      display: flex; justify-content: space-between; align-items: flex-start;
+      padding: 1.4rem 1.6rem;
+      background: var(--cream); border-radius: 4px;
+      border: 1px solid var(--border);
+      transition: all 0.25s;
+    }
+    .menu-item:hover {
+      border-color: rgba(181,98,42,0.3);
+      box-shadow: 0 4px 20px rgba(90,50,20,0.07);
+      transform: translateY(-2px);
+    }
+    .menu-item-info h4 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.15rem; font-weight: 600; color: var(--dark);
+    }
+    .menu-item-info p {
+      font-size: 0.78rem; color: var(--muted);
+      margin-top: 0.3rem; line-height: 1.5; max-width: 220px;
+    }
+    .menu-item-price {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.1rem; font-weight: 600;
+      color: var(--terracotta); white-space: nowrap; margin-left: 1rem;
+    }
+
+    /* ── HOURS & LOCATION ── */
+    #info {
+      background: var(--dark);
+      color: var(--cream);
+    }
+    #info .section-title { color: var(--cream); }
+    .info-grid {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 5rem; margin-top: 4rem;
+    }
+    .hours-table { margin-top: 1.5rem; }
+    .hours-row {
+      display: flex; justify-content: space-between;
+      padding: 0.85rem 0;
+      border-bottom: 1px solid rgba(245,237,224,0.1);
+      font-size: 0.88rem;
+    }
+    .hours-row:last-child { border-bottom: none; }
+    .hours-row .day { color: rgba(245,237,224,0.6); letter-spacing: 0.05em; }
+    .hours-row .time { color: var(--gold); font-weight: 500; }
+    .contact-block { margin-top: 1.5rem; }
+    .contact-item {
+      display: flex; align-items: flex-start; gap: 1rem;
+      padding: 1rem 0; border-bottom: 1px solid rgba(245,237,224,0.1);
+    }
+    .contact-item:last-child { border-bottom: none; }
+    .contact-icon {
+      width: 36px; height: 36px; border-radius: 50%;
+      background: rgba(181,98,42,0.25);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1rem; flex-shrink: 0;
+    }
+    .contact-item-text { font-size: 0.88rem; }
+    .contact-item-text strong {
+      display: block; font-size: 0.72rem;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      color: rgba(245,237,224,0.5); margin-bottom: 0.25rem;
+    }
+    .contact-item-text a {
+      color: var(--cream); text-decoration: none; transition: color 0.2s;
+    }
+    .contact-item-text a:hover { color: var(--gold); }
+
+    /* ── BOOKING BANNER ── */
+    .booking-banner {
+      background: var(--terracotta);
+      padding: 4rem 2rem; text-align: center;
+    }
+    .booking-banner h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2rem, 5vw, 3rem);
+      font-weight: 300; color: var(--cream);
+      margin-bottom: 0.6rem;
+    }
+    .booking-banner p {
+      color: rgba(245,237,224,0.75); font-size: 0.88rem;
+      margin-bottom: 2rem; letter-spacing: 0.05em;
+    }
+    .btn-cream {
+      background: var(--cream); color: var(--brick);
+    }
+    .btn-cream:hover {
+      background: #fff; transform: translateY(-2px);
+      box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      background: #1a0f07;
+      padding: 3rem 2rem;
+      text-align: center;
+    }
+    .footer-logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.5rem; font-weight: 600;
+      color: var(--gold); letter-spacing: 0.04em;
+      margin-bottom: 0.8rem;
+    }
+    .footer-tagline {
+      font-size: 0.72rem; letter-spacing: 0.18em; text-transform: uppercase;
+      color: rgba(245,237,224,0.3);
+    }
+    .footer-divider {
+      width: 40px; height: 1px;
+      background: rgba(201,147,58,0.3);
+      margin: 1.5rem auto;
+    }
+    .footer-copy {
+      font-size: 0.72rem; color: rgba(245,237,224,0.25); letter-spacing: 0.08em;
+    }
+
+    /* ── MOBILE ── */
+    @media (max-width: 768px) {
+      nav { padding: 1.2rem 1.5rem; }
+      .nav-links { gap: 1.2rem; }
+      .about-grid,
+      .info-grid { grid-template-columns: 1fr; gap: 3rem; }
+      .about-image-wrap { display: none; }
+      .menu-panel.active { grid-template-columns: 1fr; }
+    }
+
+    /* ── SCROLL REVEAL ── */
+    .reveal { opacity: 0; transform: translateY(30px); transition: opacity 0.7s, transform 0.7s; }
+    .reveal.visible { opacity: 1; transform: none; }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a href="#" class="nav-logo">Schiegaarden</a>
+    <ul class="nav-links">
+      <li><a href="#about">Om oss</a></li>
+      <li><a href="#menu">Meny</a></li>
+      <li><a href="#info">Kontakt</a></li>
+      <li><a href="#booking"><span style="color:var(--terracotta)">Bestill bord</span></a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO -->
+  <header class="hero">
+    <div class="hero-ring"></div>
+    <p class="hero-tag">Kinarestaurant · Pizza · Norsk mat</p>
+    <h1>Schie<em>gaarden</em><br>Kinarestaurant</h1>
+    <div class="hero-divider"></div>
+    <p class="hero-sub">En smaksreise fra Østen til Norden — hjemmelaget mat med varme og sjel siden vi åpnet dørene.</p>
+    <div class="hero-cta">
+      <a href="#menu" class="btn btn-primary">Se menyen</a>
+      <a href="#info" class="btn btn-outline">Finn oss</a>
+    </div>
+  </header>
+
+  <!-- ABOUT -->
+  <section id="about">
+    <div class="container">
+      <div class="reveal">
+        <p class="section-label">Vår historie</p>
+        <h2 class="section-title">Tre kulturer,<br><em>ett kjøkken</em></h2>
+      </div>
+      <div class="about-grid">
+        <div class="about-text reveal">
+          <p>
+            Hos Schiegaarden Kinarestaurant møtes tre kulinariske verdener i perfekt harmoni. Vi serverer autentiske orientalske retter, klassisk italiensk pizza og tradisjonsrik norsk mat — alt laget med ferske råvarer og oppriktig kjærlighet til matlagingskunsten.
+          </p>
+          <p>
+            Vår restaurant er et sted der familier samles, venner møtes, og alle gjester føler seg hjemme. Enten du lengter etter duften av nybakt pizza, en dampende wok-rett eller en smak av det norske kjøkkenet — vi har noe for enhver smak.
+          </p>
+          <div class="stats-row">
+            <div class="stat">
+              <div class="stat-num">3</div>
+              <div class="stat-label">Kjøkken</div>
+            </div>
+            <div class="stat">
+              <div class="stat-num">50+</div>
+              <div class="stat-label">Retter på menyen</div>
+            </div>
+            <div class="stat">
+              <div class="stat-num">❤️</div>
+              <div class="stat-label">Med hjertet i maten</div>
+            </div>
+          </div>
+        </div>
+        <div class="about-image-wrap reveal">
+          <div class="about-img-box">
+            <span style="font-size:6rem;z-index:1;position:relative;">🥢</span>
+          </div>
+          <div class="about-badge">
+            <span>🍜</span>
+            <span>Ekte smak</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MENU -->
+  <section id="menu">
+    <div class="container">
+      <div class="reveal">
+        <p class="section-label">Vår meny</p>
+        <h2 class="section-title">Smak deg<br><em>rundt verden</em></h2>
+      </div>
+      <div class="menu-tabs reveal">
+        <button class="tab-btn active" onclick="showTab('oriental')">🥢 Orientalsk</button>
+        <button class="tab-btn" onclick="showTab('pizza')">🍕 Pizza</button>
+        <button class="tab-btn" onclick="showTab('norsk')">🇧🇻 Norsk</button>
+      </div>
+
+      <!-- Oriental -->
+      <div class="menu-panel active" id="tab-oriental">
+        <div class="menu-item">
+          <div class="menu-item-info">
+            <h4>Kung Pao kylling</h4>
+            <p>Stekt kylling med peanøtter, paprika og krydret saus</p>
+          </div>
+          <div class="menu-item-price">175 kr</div>
+        </div>
+        <div class="menu-item">
+          <div class="menu-item-info">
+            <h4>Wok-nudler med reker</h4>
+            <p>Ekte wok-stekte nudler med ferske reker og grønnsaker</p>
+          </div>
+          <div class="menu-item-price">185 kr</div>
+        </div>
+        <div class="menu-item">
+          <div class="menu-item-info">
+            <h4>Sweet & sour svin</h4>
+            <p>Klassisk kinesisk rett med søt-sur saus og ananas</p>
+          </div>
+          <div class="menu-item-price">179 kr</div>
+        </div>
+        <div class="menu-item">
+          <div class="menu-item-info">
+            <h4>Dim sum (6 stk)</h4>
+            <p>Håndlagde dampede dumplings med svinefyll</p>
+          </div>
+          <div class="menu-item-price">129 kr</div>
+        </div>
+        <div class="menu-item">
+          <div class="menu-item-info">
+            <h4>Peking-and</h4>
+            <p>Sprø stekt and med hoisinsaus og pannekaker</p>
+          </div>
+          <div class="menu-item-price">249 kr</div>
+        </div>
+        <div class="menu-item">
+          <div class="menu-item-info">
+            <h4>Grønnsakscurry</h4>
+            <p>Kremet kokosmelkcurry med sesonggrønnsaker</p>
+          </div>
+          <div class="menu-item-price">159 kr</div>
+        </div>
+      </div>
+
+      <!-- Pizza -->
+      <div class="menu-panel" id="tab-pizza">
+        <div class="menu-item">
+          <div class="menu-item-info">
+            <h4>Margherita</h4>
+            <p>Tomatsaus, mozzarella og fersk basilikum</p>
+          </div>
+          <div class="menu-item-price">145 kr</div>
+        </div>
+        <div class="menu-item">
+          <div class="menu-item-info">
+            <h4>Pepperoni</h4>
+            <p>Tomatsaus, mozzarella og krydret pepperoni</p>
+          </div>
+          <div class="menu-item-price">165 kr</div>
+        </div>
+        <div class="menu-item">
+          <div class="menu-item-info">
+            <h4>Quattro Stagioni</h4>
+            <p>Skinke, sopp, artisjokk og oliven — fire smaker i én</p>
+          </div>
+          <div class="menu-item-price">179 kr</div>
+        </div>
+        <div class="menu-item">
+          <div class="menu-item-info">
+            <h4>Schiegaarden Special</h4>
+            <p>Husets signaturpizza med orientalsk twist</p>
+          </div>
+          <div class="menu-item-price">189 kr</div>
+        </div>
+        <div class="menu-item">
+          <div class="menu-item-info">
+            <h4>Vegetariana</h4>
+            <p>Sesongens grønnsaker, ruccola og parmesan</p>
+          </div>
+          <div class="menu-item-price">159 kr</div>
+        </div>
+        <div class="menu-item">
+          <div class="menu-item-info">
+            <h4>Kjøttpizza</h4>
+            <p>Mozzarella, kjøttdeig, løk og paprika</p>
+          </div>
+          <div class="menu-item-price">175 kr</div>
+        </div>
+      </div>
+
+      <!-- Norsk -->
+      <div class="menu-panel" id="tab-norsk">
+        <div class="menu-item">
+          <div class="menu-item-info">
+            <h4>Kjøttkaker med saus</h4>
+            <p>Hjemmelagde kjøttkaker med brun saus og poteter</p>
+          </div>
+          <div class="menu-item-price">189 kr</div>
+        </div>
+        <div class="menu-item">
+          <div class="menu-item-info">
+            <h4>Laks med dillsaus</h4>
+            <p>Stekt fersk laks, dillkremede poteter og grønnsaker</p>
+          </div>
+          <div class="menu-item-price">229 kr</div>
+        </div>
+        <div class="menu-item">
+          <div class="menu-item-info">
+            <h4>Fiskegrateng</h4>
+            <p>Klassisk norsk fiskegrateng med makaroni og hvit saus</p>
+          </div>
+          <div class="menu-item-price">175 kr</div>
+        </div>
+        <div class="menu-item">
+          <div class="menu-item-info">
+            <h4>Reinsdyrsteik</h4>
+            <p>Stekt reinsdyr med rotgrønnsaker og tyttebærsaus</p>
+          </div>
+          <div class="menu-item-price">269 kr</div>
+        </div>
+        <div class="menu-item">
+          <div class="menu-item-info">
+            <h4>Plukkfisk</h4>
+            <p>Tradisjonell norsk hvitfisk med bacon og løk</p>
+          </div>
+          <div class="menu-item-price">179 kr</div>
+        </div>
+        <div class="menu-item">
+          <div class="menu-item-info">
+            <h4>Lapskaus</h4>
+            <p>Norsk gryte med kjøtt og rotgrønnsaker, servert med brød</p>
+          </div>
+          <div class="menu-item-price">165 kr</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOURS & CONTACT -->
+  <section id="info">
+    <div class="container">
+      <div class="reveal">
+        <p class="section-label" style="color:var(--gold)">Besøk oss</p>
+        <h2 class="section-title">Åpningstider<br><em>& kontakt</em></h2>
+      </div>
+      <div class="info-grid">
+        <div class="reveal">
+          <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:300;color:var(--cream);margin-bottom:0.5rem;margin-top:2rem;">Åpningstider</h3>
+          <div class="hours-table">
+            <div class="hours-row"><span class="day">Mandag – Torsdag</span><span class="time">11:00 – 21:00</span></div>
+            <div class="hours-row"><span class="day">Fredag</span><span class="time">11:00 – 22:00</span></div>
+            <div class="hours-row"><span class="day">Lørdag</span><span class="time">12:00 – 22:00</span></div>
+            <div class="hours-row"><span class="day">Søndag</span><span class="time">12:00 – 20:00</span></div>
+          </div>
+        </div>
+        <div class="reveal">
+          <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:300;color:var(--cream);margin-bottom:0.5rem;margin-top:2rem;">Kontaktinformasjon</h3>
+          <div class="contact-block">
+            <div class="contact-item">
+              <div class="contact-icon">📍</div>
+              <div class="contact-item-text">
+                <strong>Adresse</strong>
+                Schiegaardsveien 1, Norge
+              </div>
+            </div>
+            <div class="contact-item">
+              <div class="contact-icon">📞</div>
+              <div class="contact-item-text">
+                <strong>Telefon</strong>
+                <a href="tel:+4700000000">+47 000 00 000</a>
+              </div>
+            </div>
+            <div class="contact-item">
+              <div class="contact-icon">✉️</div>
+              <div class="contact-item-text">
+                <strong>E-post</strong>
+                <a href="mailto:post@schiegaarden.no">post@schiegaarden.no</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- BOOKING BANNER -->
+  <section id="booking" class="booking-banner">
+    <div class="container reveal">
+      <h2>Reserver ditt bord i dag</h2>
+      <p>Ring oss eller send en e-post — vi setter pris på å se deg!</p>
+      <a href="tel:+4700000000" class="btn btn-cream">Ring oss nå</a>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-logo">Schiegaarden Kinarestaurant</div>
+    <div class="footer-tagline">Pizza · Orientalsk · Norsk mat</div>
+    <div class="footer-divider"></div>
+    <div class="footer-copy">© 2025 Schiegaarden Kinarestaurant. Alle rettigheter forbeholdt.</div>
+  </footer>
+
+  <script>
+    // Tab switching
+    function showTab(id) {
+      document.querySelectorAll('.menu-panel').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.getElementById('tab-' + id).classList.add('active');
+      event.currentTarget.classList.add('active');
+    }
+
+    // Scroll reveal
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('visible');
+          observer.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.12 });
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+    // Shrink nav on scroll
+    window.addEventListener('scroll', () => {
+      document.querySelector('nav').style.padding = window.scrollY > 60 ? '0.9rem 4rem' : '1.4rem 4rem';
+    });
+  </script>
+</body>
+</html>
