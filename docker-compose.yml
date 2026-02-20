@@ -17,7 +17,7 @@ services:
   cloudflared:
     image: cloudflare/cloudflared:latest
     container_name: schiegaarden_tunnel
-    command: tunnel --no-autoupdate --url http://caddy:80
+    command: tunnel --no-autoupdate run --token ${CLOUDFLARE_TUNNEL_TOKEN}
     depends_on:
       - caddy
     restart: unless-stopped
